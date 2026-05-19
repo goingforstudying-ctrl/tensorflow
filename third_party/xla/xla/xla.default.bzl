@@ -1,5 +1,8 @@
 """Wrapper around proto libraries used inside the XLA codebase."""
 
+load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_node_test")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -198,3 +201,34 @@ def xla_py_strict_test(name, deps = None, data = None, env = None, need_cuda_lib
         env = env,
         **kwargs
     )
+
+def xla_ts_library(**kwargs):
+    """A wrapper around ts_project that strips incompatible attributes.
+
+    Args:
+      **kwargs: Arguments to pass to ts_project.
+    """
+    kwargs.pop("compatible_with", None)
+    ts_project(**kwargs)
+
+def xla_js_binary(**kwargs):
+    """A wrapper around js_binary that strips incompatible attributes.
+
+    Args:
+      **kwargs: Arguments to pass to js_binary.
+    """
+    kwargs.pop("compatible_with", None)
+    js_binary(**kwargs)
+
+def xla_js_test_suite(**kwargs):
+    """A wrapper around jasmine_node_test that supports a test_lib dependency.
+
+    Args:
+      **kwargs: Arguments to pass to jasmine_node_test.
+    """
+    kwargs.pop("compatible_with", None)
+    kwargs.pop("browsers", None)
+    test_lib = kwargs.pop("test_lib", None)
+    if test_lib:
+        kwargs["deps"] = kwargs.get("deps", []) + [test_lib]
+    jasmine_node_test(**kwargs)
