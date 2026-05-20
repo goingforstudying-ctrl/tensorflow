@@ -34,13 +34,23 @@ namespace tpu {
 using SerializedProto = TpuSerializedProto;
 
 // Serializes a `proto` and put the result in the given `SerializedProtoType*`
-// argument.
+// argument. Possible `SerializedProtoType` options include
+// `TpuSerializedProto`, `TpuExecutableSerializedProto`,
+// `CompilerMetadataSerializedProto`, `HostComputeMetadataSerializedProto`, and
+// `XLA_DeviceAssignment`.
+//
+// An empty proto will be serialized as (nullptr, 0).
 //
 // Users should call SerializedProto_Free on `serialized_proto` afterwards.
 template <class ProtoType, class SerializedProtoType>
 inline void SerializeProto(const ProtoType& proto,
                            SerializedProtoType* serialized_proto) {
   auto size = proto.ByteSizeLong();
+  if (size == 0) {
+    serialized_proto->size = 0;
+    serialized_proto->bytes = nullptr;
+    return;
+  }
   auto bytes = new char[size];
   CHECK(proto.SerializeToArray(bytes, size));
   serialized_proto->size = size;
@@ -62,19 +72,14 @@ inline SerializedProto SerializeProto(const ProtoType& proto) {
 template <class ProtoType, class SerializedProtoType>
 inline ProtoType DeserializeProto(const SerializedProtoType& serialized_proto) {
   ProtoType proto;
-  if (serialized_proto.bytes != nullptr) {
-    CHECK_GT(serialized_proto.size, 0);
-    CHECK(proto.ParseFromArray(serialized_proto.bytes, serialized_proto.size))
-        << "Invalid buffer, failed to deserialize buffer.";
-  }
+  CHECK(proto.ParseFromArray(serialized_proto.bytes, serialized_proto.size))
+      << "Invalid buffer, failed to deserialize buffer.";
   return proto;
 }
 
 // Releases the memory allocated for serialized protos.
 template <class SerializedProtoType>
 inline void SerializedProto_Free(const SerializedProtoType& serialized_proto) {
-  CHECK_NE(serialized_proto.bytes, nullptr);
-  CHECK_GT(serialized_proto.size, 0);
   delete[] serialized_proto.bytes;
 }
 

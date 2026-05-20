@@ -57,7 +57,7 @@ typedef struct SE_Stream SE_Stream;
 typedef struct SE_Event SE_Event;
 
 typedef struct TpuSerializedProto {
-  const char* bytes;
+  const char* bytes;  // (nullptr, 0) is valid for an empty proto.
   size_t size;
 } TpuSerializedProto;
 

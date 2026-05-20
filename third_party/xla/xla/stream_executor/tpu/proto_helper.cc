@@ -23,8 +23,6 @@ extern "C" {
 
 void StreamExecutor_Tpu_FreeSerializedProto(const TpuSerializedProto* proto) {
   CHECK_NE(proto, nullptr);
-  CHECK_NE(proto->bytes, nullptr);
-  CHECK_GT(proto->size, 0);
   delete[] proto->bytes;
 }
 

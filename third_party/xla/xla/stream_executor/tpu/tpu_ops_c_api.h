@@ -42,22 +42,22 @@ typedef struct XLA_TpuProgram XLA_TpuProgram;
 enum TpuProgramShardingType { kInvalid = 0, kMain, kSharding, kUnsharding };
 
 struct TpuProgramFingerprint {
-  const char* bytes;
+  const char* bytes;  // (nullptr, 0) is valid for an empty fingerprint.
   size_t size;
 };
 
 struct TpuExecutableSerializedProto {
-  const char* bytes;
+  const char* bytes;  // (nullptr, 0) is valid for an empty proto.
   size_t size;
 };
 
 struct CompilerMetadataSerializedProto {
-  const char* bytes;
+  const char* bytes;  // (nullptr, 0) is valid for an empty proto.
   size_t size;
 };
 
 struct HostComputeMetadataSerializedProto {
-  const char* bytes;
+  const char* bytes;  // (nullptr, 0) is valid for an empty proto.
   size_t size;
 };
 
@@ -69,7 +69,7 @@ typedef struct TpuEmbedding_TensorBatchFixedState
     TpuEmbedding_TensorBatchFixedState;
 
 typedef struct XLA_DeviceAssignment {
-  const char* bytes;
+  const char* bytes;  // (nullptr, 0) is valid for an empty device assignment.
   size_t size;
 } XLA_DeviceAssignment;
 
