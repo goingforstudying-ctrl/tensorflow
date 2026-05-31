@@ -35,6 +35,9 @@ limitations under the License.
 // FP16_H and FP16_BITCASTS_H are defined by //third_party/FP16/fp16.h and
 // //third_party/FP16/bitcasts.h respectively.
 #if !defined(FP16_H) && !defined(FP16_BITCASTS_H)
+#define FP16_H
+#define FP16_BITCASTS_H
+#define FP16_FP16_H
 
 static inline float fp32_from_bits(uint32_t w) {
   union {
