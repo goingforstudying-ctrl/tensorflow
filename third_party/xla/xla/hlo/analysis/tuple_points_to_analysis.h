@@ -38,7 +38,6 @@ limitations under the License.
 #include "xla/service/logical_buffer.h"
 #include "xla/shape.h"
 #include "xla/shape_tree.h"
-#include "xla/shape_util.h"
 #include "xla/tsl/lib/gtl/compactptrset.h"
 #include "xla/xla_data.pb.h"
 
